@@ -68,24 +68,27 @@ next:
 
 print endp
 
-double_letters proc
-xor ebx, ebx
-lea esi, buf
-lea edi, buf__
+double_letters proc buf_k:DWORD, buf_l : DWORD
+xor eax, eax
+mov esi, buf_k
+mov edi, buf_l
+
+
 start:
-cmp buf, 0
+mov al, [esi]
+cmp al, 0
 jz return
 
-mov edi, [esi]
+mov [edi], al
 inc edi
-mov edi, [esi]
+mov [edi], al
+inc edi
 inc esi
-
 jmp start
 
 return:
-	ret
-
+  ret
+  
 double_letters endp
 
 get_string proc
@@ -127,8 +130,8 @@ main proc
 
   call get_string
   call print
-  call double_letters
-  invoke MessageBox, NULL, addr buf__, addr hello_title, MB_YESNO
+  invoke double_letters addr buf, addr buf__
+  invoke MessageBox, NULL, addr buf, addr hello_title, MB_YESNO
   
   ret
 

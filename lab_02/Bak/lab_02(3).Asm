@@ -10,17 +10,13 @@ Begin:
   
 invoke ExitProcess,NULL
 
-
 AssembleString proc
 LOCAL drive_word : dword
 LOCAL drive[4] : byte
 LOCAL iter :dword
 LOCAL comparator : dword
 LOCAL char : byte
-LOCAL char_amount : dword
-LOCAL len_name_logic : dword
-LOCAL len_file_system : dword
-
+  
   mov drive[1], ':'
   mov drive[2], '\'
   mov drive[3], 0
@@ -42,15 +38,9 @@ drive_info:
   test drive_word,  ecx
   jnz add_drive
 
-  GetVolumeInformation, addr drive, addr name_logic, len_name_logic, NULL, NULL, NULL, file_system, len_file_system
   
   invoke lstrcat, addr buf, addr drive
   invoke lstrcat, addr buf, addr string1
-  invoke lstrcat, addr buf, addr string3
-  invoke lstrcat, addr buf, addr name_logic
-  invoke lstrcat, addr buf, addr string3
-  invoke lstrcat, addr buf, addr file_system
-  
   dec iter
   cmp iter, 0
   jz return
@@ -61,13 +51,20 @@ add_drive:
   lea eax, get_drives
   mov cl, char
   calculate:
-    cmp [eax], cl
-    jz next
-    inc eax
-    jmp calculate
+  cmp [eax], cl
+  jz next
+  inc eax
+  jmp calculate
+    
   next:
-  
+  push eax
   invoke lstrcat, addr buf, eax
+  pop eax
+  invoke GetVolumeInformation, eax, addr NameBuffer, 256, addr VSNumber, addr MCLength, 0, addr SysNameBuffer, 256
+  invoke lstrcat, addr buf, addr string2
+  invoke lstrcat, addr buf, addr SysNameBuffer
+  invoke lstrcat, addr buf, addr string3
+  invoke lstrcat, addr buf, addr NameBuffer
   invoke lstrlen, addr buf
   mov buf[eax], 0dh
   dec iter

@@ -54,9 +54,7 @@ small:
 	jmp counter
 	
 next:
-    ;shl ecx, 1 
 	invoke wsprintf, addr output, addr format, ebx, ecx
-	;invoke MessageBox,0, addr output, 0, MB_OK
 	invoke lstrcat, addr buf, addr output
 	
 	inc ebx
@@ -68,25 +66,27 @@ next:
 
 print endp
 
-double_letters proc
-xor ebx, ebx
-lea esi, buf
-lea edi, buf__
+double_letters proc buf_k:DWORD, buf_l : DWORD
+xor eax, eax
+mov esi, buf_k
+mov edi, buf_l
+
+
 start:
-cmp buf, 0
+mov al, [esi]
+cmp al, 0
 jz return
 
-mov [edi], esi
+mov [edi], al
 inc edi
-mov [edi], esi
+mov [edi], al
+inc edi
 inc esi
-inc edi
-
 jmp start
 
 return:
-	ret
-
+  ret
+  
 double_letters endp
 
 get_string proc
@@ -128,7 +128,7 @@ main proc
 
   call get_string
   call print
-  call double_letters
+  invoke double_letters, addr buf, addr buf__
   invoke MessageBox, NULL, addr buf__, addr hello_title, MB_YESNO
   
   ret
