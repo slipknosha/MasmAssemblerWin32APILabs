@@ -54,9 +54,7 @@ small:
 	jmp counter
 	
 next:
-    ;shl ecx, 1 
 	invoke wsprintf, addr output, addr format, ebx, ecx
-	;invoke MessageBox,0, addr output, 0, MB_OK
 	invoke lstrcat, addr buf, addr output
 	
 	inc ebx
@@ -102,7 +100,7 @@ LOCAL enter_[2]:BYTE
   invoke GetDriveType, addr buf3
   invoke GetSystemDirectory, addr buf4, 256
   invoke GetTempPath, 256, addr buf5
-  ;invoke GetUserName, addr buf6, addr buflen
+  invoke GetUserName, addr buf6, addr buflen
   invoke GetWindowsDirectory, addr buf7, 255
   
 
@@ -111,7 +109,7 @@ LOCAL enter_[2]:BYTE
   invoke lstrcat, addr buf3, addr enter_
   invoke lstrcat, addr buf4, addr enter_
   invoke lstrcat, addr buf5, addr enter_
-  ;invoke lstrcat, addr buf6, addr enter_
+  invoke lstrcat, addr buf6, addr enter_
   invoke lstrcat, addr buf7, addr enter_
 
   invoke lstrcat, addr buf, addr buf1
@@ -131,7 +129,7 @@ main proc
   call get_string
   call print
   invoke double_letters, addr buf, addr buf__
-  invoke MessageBox, NULL, addr buf, addr hello_title, MB_YESNO
+  invoke MessageBox, NULL, addr buf__, addr hello_title, MB_YESNO
   
   ret
 

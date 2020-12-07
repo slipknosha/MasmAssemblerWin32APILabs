@@ -25,3 +25,10 @@ buf db 1024 dup(0)
 file db "D:\name.txt", 0
 
 fHandler dd 0
+
+buf_ dd 0
+
+dich db "lsd", 0
+
+random_name db 256 dup(0)
+

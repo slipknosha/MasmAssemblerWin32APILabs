@@ -23,3 +23,5 @@ size_ db 1024 dup(0)
 buf db 1024 dup(0)
 
 file db "D:\name.txt", 0
+
+fHandler db 4 dup(0)

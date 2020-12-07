@@ -54,9 +54,7 @@ small:
 	jmp counter
 	
 next:
-    ;shl ecx, 1 
 	invoke wsprintf, addr output, addr format, ebx, ecx
-	;invoke MessageBox,0, addr output, 0, MB_OK
 	invoke lstrcat, addr buf, addr output
 	
 	inc ebx

@@ -90,9 +90,13 @@ return:
 double_letters endp
 
 get_string proc
+LOCAL _2bytes:WORD
 LOCAL enter_[2]:BYTE
   mov enter_[0], 0dh
   mov enter_[1], 0
+  
+  mov ax, word ptr enter_
+  mov _2bytes, ax
   
   invoke GetComputerName, addr buf1, addr buflen
   mov buflen, 256
@@ -104,13 +108,13 @@ LOCAL enter_[2]:BYTE
   invoke GetWindowsDirectory, addr buf7, 255
   
 
-  invoke lstrcat, addr buf1, addr enter_
-  invoke lstrcat, addr buf2, addr enter_
-  invoke lstrcat, addr buf3, addr enter_
-  invoke lstrcat, addr buf4, addr enter_
-  invoke lstrcat, addr buf5, addr enter_
+  invoke lstrcat, addr buf1, addr _2bytes
+  invoke lstrcat, addr buf2, addr _2bytes
+  invoke lstrcat, addr buf3, addr _2bytes
+  invoke lstrcat, addr buf4, addr _2bytes
+  invoke lstrcat, addr buf5, addr _2bytes
   ;invoke lstrcat, addr buf6, addr enter_
-  invoke lstrcat, addr buf7, addr enter_
+  invoke lstrcat, addr buf7, addr _2bytes
 
   invoke lstrcat, addr buf, addr buf1
   invoke lstrcat, addr buf, addr buf2

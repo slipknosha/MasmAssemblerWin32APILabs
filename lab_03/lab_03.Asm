@@ -62,22 +62,31 @@ Upper_Case endp
 
 main proc
 	LOCAL handler:DWORD
-	
-	mov handle.lStructSize, sizeof(OPENFILENAME)
-	mov handle.lpstrFile, offset file_name
-	mov handle.nMaxFile, 256
-	mov handle.lpstrInitialDir, offset dir
-	mov handle.lpstrTitle, NULL
+	LOCAL handle:DWORD
 	
 	invoke Mem_Alloc, 1024
 	mov buf_, eax
-	invoke GetOpenFileName, addr handle
+	push eax
+	
+	invoke Mem_Alloc, sizeof(OPENFILENAME)
+	mov handle, eax
+	assume eax: ptr OPENFILENAME
+	mov [eax].lStructSize, sizeof(OPENFILENAME)
+	mov [eax].lpstrFile, offset file_name
+	mov [eax].nMaxFile, 256
+	mov [eax].lpstrInitialDir, offset dir
+	mov [eax].lpstrTitle, NULL
+	
+	
+	invoke GetOpenFileName, eax
+	pop eax
+	
 	invoke CreateFile, addr file_name, GENERIC_READ, FILE_SHARE_WRITE or FILE_SHARE_READ, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0
 	mov handler, eax
 	invoke ReadFile, handler, buf_, 1024, addr size_, NULL
-	invoke MessageBox, 0, buf_, 0, MB_OK
+	invoke MessageBox, 0, buf_, addr title_, MB_OK
     invoke Upper_Case
-	invoke MessageBox, 0, buf_, 0, MB_OK
+	invoke MessageBox, 0, buf_, addr title_, MB_OK
 	invoke CloseHandle, handler
 	invoke GetTempFileName, addr dir, addr rand_prefix, 0, addr random_name
 	invoke CreateFile, addr random_name, GENERIC_WRITE, FILE_SHARE_WRITE or FILE_SHARE_READ, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0
@@ -85,6 +94,7 @@ main proc
 	invoke WriteFile, handler, buf_, 1024, 0, 0
 	invoke CloseHandle, handler
 	invoke Mem_Free, buf_
+	invoke Mem_Free, handle
 	
 	ret
 

@@ -61,29 +61,35 @@ Upper_Case endp
 
 
 main proc
-	LOCAL kek:DWORD
+	LOCAL handler:DWORD
+	LOCAL handle:DWORD
+	
+	invoke Mem_Alloc, sizeof(OPENFILENAME)
+	mov handle, eax
+	assume handle: ptr OPENFILENAME
 	mov handle.lStructSize, sizeof(OPENFILENAME)
-	;mov handle.lpstrFilter, offset filtr
-	;mov handle.nFilterIndex, 1
 	mov handle.lpstrFile, offset file_name
 	mov handle.nMaxFile, 256
 	mov handle.lpstrInitialDir, offset dir
 	mov handle.lpstrTitle, NULL
-	;mov handle.Flags, OFN_PATHMUSTEXIST + OFN_FILEMUSTEXIST
-	invoke Mem_Alloc,1024
+	
+	invoke Mem_Alloc, 1024
 	mov buf_, eax
 	invoke GetOpenFileName, addr handle
-	invoke MessageBox, 0, addr file_name, 0, MB_OK
-	;invoke OpenFile, addr file_name, 0, 0
 	invoke CreateFile, addr file_name, GENERIC_READ, FILE_SHARE_WRITE or FILE_SHARE_READ, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0
-	mov kek, eax
-	invoke ReadFile, kek, buf_, 1024, addr size_, NULL
+	mov handler, eax
+	invoke ReadFile, handler, buf_, 1024, addr size_, NULL
+	invoke MessageBox, 0, buf_, addr title_, MB_OK
     invoke Upper_Case
-	invoke MessageBox, 0, buf_, 0, MB_OK
-	invoke GetTempFileName, addr dir, addr dich, 0, addr random_name
-	invoke MessageBox, 0, addr random_name, 0, MB_OK
+	invoke MessageBox, 0, buf_, addr title_, MB_OK
+	invoke CloseHandle, handler
+	invoke GetTempFileName, addr dir, addr rand_prefix, 0, addr random_name
+	invoke CreateFile, addr random_name, GENERIC_WRITE, FILE_SHARE_WRITE or FILE_SHARE_READ, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0
+	mov handler, eax
+	invoke WriteFile, handler, buf_, 1024, 0, 0
+	invoke CloseHandle, handler
 	invoke Mem_Free, buf_
-	invoke CloseHandle, kek
+	
 	ret
 
 main endp
