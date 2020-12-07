@@ -1,0 +1,49 @@
+[Project]
+Assembler=Masm
+Type=Win32 App (no res)
+Description=lab_03
+Backup=$P\Bak\
+Group=1
+GroupExpand=1
+[Files]
+1=lab_03.Asm
+2=lab_03.Inc
+[MakeFiles]
+0=lab_03.rap
+1=lab_03.rc
+2=lab_03.asm
+3=lab_03.obj
+4=lab_03.res
+5=lab_03.exe
+6=lab_03.def
+7=lab_03.dll
+8=lab_03.txt
+9=lab_03.lib
+10=lab_03.mak
+11=lab_03.hla
+12=lab_03.com
+13=lab_03.ocx
+14=lab_03.idl
+15=lab_03.tlb
+[MakeDef]
+Menu=0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0
+1=4,O,$B\RC.EXE /v,1
+2=3,O,$B\ML.EXE /c /coff /Cp /nologo /I"$I",2
+3=5,O,$B\LINK.EXE /SUBSYSTEM:WINDOWS /RELEASE /VERSION:4.0 /LIBPATH:"$L" /OUT:"$5",3
+4=0,0,,5
+5=rsrc.obj,O,$B\CVTRES.EXE,rsrc.res
+6=*.obj,O,$B\ML.EXE /c /coff /Cp /nologo /I"$I",*.asm
+7=0,0,"$E\OllyDbg",5
+[Resource]
+[StringTable]
+[Accel]
+[VerInf]
+[Group]
+Group=Added files,Assembly,Resources,Misc,Modules
+1=2
+2=2
+[AutoLoad]
+AutoLoad=
+[RADebugBP]
+1=
+2=
